@@ -30,10 +30,22 @@ class GoalTransaction(models.Model):
         related_name='goal_transactions',
         on_delete=models.CASCADE
     )
+    user = models.ForeignKey(
+        User,
+        related_name='goal_transactions',
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
+    )
     type = models.CharField(
         'Тип операции',
         max_length=20,
         choices=TYPE_CHOICES
+    )
+    transaction_amount = models.DecimalField(
+        'Сумма транзакции',
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)]
     )
     repeat = models.CharField(
         'Повтор операции',
@@ -48,7 +60,7 @@ class GoalTransaction(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Транзакция для цели'
+        verbose_name = 'транзакция для цели'
         verbose_name_plural = 'Транзакции для цели'
 
     def __str__(self):
@@ -74,9 +86,10 @@ class Goals(models.Model):
     description = models.TextField(
         'Описание',
         blank=True,
-        null=True
+        null=True,
+        help_text='Необязательное поле'
     )
-    goal_sum = models.PositiveIntegerField('Необходимая сумма')
+    goal_amount = models.PositiveIntegerField('Необходимая сумма')
     term = models.PositiveIntegerField(
         'Срок',
         # Срок исчисляется в месяцах
@@ -110,7 +123,7 @@ class Goals(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Цель'
+        verbose_name = 'цель'
         verbose_name_plural = 'Цели'
 
     def __str__(self):

@@ -11,7 +11,7 @@ class Currency(models.Model):
 
     title = models.CharField(
         'Валюта',
-        max_length=settings.TRANSACTION_MAX_LENGTH
+        max_length=settings.TRANSACTION_MAX_LENGTH,
     )
     symbol = models.CharField(
         'Символ',
@@ -20,7 +20,7 @@ class Currency(models.Model):
 
     class Meta:
         verbose_name = 'Валюта'
-        verbose_name_plural = 'Валюты'
+        verbose_name_plural = 'Типы валют'
 
     def __str__(self):
         return self.title
@@ -35,7 +35,7 @@ class CapitalType(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Тип капитала'
+        verbose_name = 'тип капитала'
         verbose_name_plural = 'Типы капитала'
 
     def __str__(self):
@@ -66,7 +66,7 @@ class Savings(models.Model):
         related_name='savings',
         on_delete=models.CASCADE,
         null=False,
-        verbose_name='Тип'
+        verbose_name='Тип',
     )
     currency = models.ForeignKey(
         Currency,
@@ -76,11 +76,14 @@ class Savings(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Вид сбережений'
-        verbose_name_plural = 'Виды сбережений'
+        verbose_name = 'вид сбережений пользователя'
+        verbose_name_plural = 'Виды сбережений пользователя'
 
     def __str__(self):
-        return f'{self.type} - {self.total_amount}'
+        return (
+            f'{self.capital_type} - {self.total_amount} '
+            f'{self.currency.symbol}'
+        )
 
 
 class CapitalsTransaction(models.Model):
@@ -101,7 +104,13 @@ class CapitalsTransaction(models.Model):
     type = models.CharField(
         'Тип операции',
         max_length=10,
-        choices=TYPE_CHOICES
+        choices=TYPE_CHOICES,
+    )
+    user = models.ForeignKey(
+        User,
+        related_name='capital_transactions',
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
     )
     savings = models.ForeignKey(
         Savings,
@@ -118,17 +127,19 @@ class CapitalsTransaction(models.Model):
     currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
-        verbose_name='Валюта'
+        verbose_name='Валюта',
     )
     description = models.TextField(
         'Описание',
         blank=True,
-        null=True
+        null=True,
+        help_text='Необязательное поле'
     )
     amount = models.DecimalField(
         'Сумма транзакции',
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)]
     )
     pub_date = models.DateTimeField(
         'Дата и время транзакции',
