@@ -125,6 +125,12 @@ class Goals(models.Model):
     class Meta:
         verbose_name = 'цель'
         verbose_name_plural = 'Цели'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('savings', 'currency'),
+                name='Unique goal constraint',
+            ),
+        )
 
     def __str__(self):
         return self.title

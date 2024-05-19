@@ -17,8 +17,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'goals.apps.GoalsConfig',
     'capital.apps.CapitalConfig',
+    'goals.apps.GoalsConfig',
+    'main.apps.MainConfig',
+    'users.apps.UsersConfig',
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +85,12 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static_leprechaun',
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
