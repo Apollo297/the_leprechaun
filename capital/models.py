@@ -148,6 +148,7 @@ class CapitalsTransaction(models.Model):
     )
 
     class Meta:
+        ordering = ('-pub_date',)
         verbose_name = 'Транзакция сбережения'
         verbose_name_plural = 'Транзакции сбережений'
 

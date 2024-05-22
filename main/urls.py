@@ -8,7 +8,7 @@ app_name = 'main'
 urlpatterns = [
     path(
         '',
-        views.IndexHome.as_view(),
+        views.HomePage.as_view(),
         name='index'
     ),
 ]

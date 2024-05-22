@@ -60,6 +60,7 @@ class GoalTransaction(models.Model):
     )
 
     class Meta:
+        ordering = ('-pub_date',)
         verbose_name = 'транзакция для цели'
         verbose_name_plural = 'Транзакции для цели'
 
@@ -123,11 +124,12 @@ class Goals(models.Model):
     )
 
     class Meta:
+        ordering = ('-pub_date',)
         verbose_name = 'цель'
         verbose_name_plural = 'Цели'
         constraints = (
             models.UniqueConstraint(
-                fields=('savings', 'currency'),
+                fields=('title', 'currency'),
                 name='Unique goal constraint',
             ),
         )

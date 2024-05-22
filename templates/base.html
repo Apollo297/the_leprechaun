@@ -10,17 +10,18 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
     <title>
-      {% comment %} {% block title %}{% endblock %} {% endcomment %}
+      {% block title %}{% endblock %}
       <h2>Проект Лепрекон</h2>
     </title>
+    <!-- Подключение bootstrap.min.css -->
+    <link rel="stylesheet" href="{% static 'static_laprechaun/css/bootstrap.min.css' %}">
     {% bootstrap_css %}
   </head>
   <body>
     {% comment %} {% include "includes/header.html" %} {% endcomment %}
     <main>
       <div class="container py-5">
-        {% comment %} {% block content %}{% endblock %} {% endcomment %}
-        Какая-то информация
+        {% block content %}{% endblock %}
       </div>
     </main>
     {% comment %} {% include "includes/footer.html" %} {% endcomment %}
