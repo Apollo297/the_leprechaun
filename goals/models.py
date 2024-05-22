@@ -6,6 +6,8 @@ from django.core.validators import (
 )
 from django.db import models
 
+from capital.models import Currency
+
 
 User = get_user_model()
 
@@ -32,7 +34,7 @@ class GoalTransaction(models.Model):
     )
     user = models.ForeignKey(
         User,
-        related_name='goal_transactions',
+        related_name='user_goal_transactions',
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
@@ -46,6 +48,12 @@ class GoalTransaction(models.Model):
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
+    )
+    currency = models.ForeignKey(
+        Currency,
+        related_name='currency_goal_transactions',
+        on_delete=models.CASCADE,
+        verbose_name='Валюта',
     )
     repeat = models.CharField(
         'Повтор операции',
@@ -76,7 +84,7 @@ class Goals(models.Model):
 
     user = models.ForeignKey(
         User,
-        related_name='goals',
+        related_name='user_goals',
         on_delete=models.CASCADE
     )
     title = models.CharField(
@@ -105,9 +113,11 @@ class Goals(models.Model):
         blank=True,
         null=True
     )
-    currency = models.CharField(
-        'Валюта',
-        max_length=10
+    currency = models.ForeignKey(
+        Currency,
+        related_name='currency_goals',
+        on_delete=models.CASCADE,
+        verbose_name='Валюта'
     )
     accumulated = models.PositiveIntegerField(
         'Накоплено',

@@ -23,7 +23,7 @@ class Currency(models.Model):
         verbose_name_plural = 'Типы валют'
 
     def __str__(self):
-        return self.title
+        return f'{self.title} ({self.symbol})'
 
 
 class CapitalType(models.Model):
@@ -58,19 +58,19 @@ class Savings(models.Model):
     )
     user = models.ForeignKey(
         User,
-        related_name='savings',
+        related_name='user_savings',
         on_delete=models.CASCADE
     )
     capital_type = models.ForeignKey(
         CapitalType,
-        related_name='savings',
+        related_name='savings_type',
         on_delete=models.CASCADE,
         null=False,
         verbose_name='Тип',
     )
     currency = models.ForeignKey(
         Currency,
-        related_name='savings',
+        related_name='savings_currency',
         on_delete=models.CASCADE,
         verbose_name='Валюта'
     )
@@ -108,13 +108,13 @@ class CapitalsTransaction(models.Model):
     )
     user = models.ForeignKey(
         User,
-        related_name='capital_transactions',
+        related_name='user_capital_transactions',
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
     savings = models.ForeignKey(
         Savings,
-        related_name='capital_transactions',
+        related_name='savings_capital_transactions',
         on_delete=models.CASCADE,
         verbose_name='Сбережение'
     )
