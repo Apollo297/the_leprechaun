@@ -10,6 +10,16 @@ urlpatterns = [
         views.GoalCreateView.as_view(),
         name='create_goal'
     ),
+    path(
+        'my_goals',
+        views.GoalsListView.as_view(),
+        name='goals_list'
+    ),
+    path(
+        '<int:pk>/',
+        views.GoalDetailView.as_view(),
+        name='goal_detail'
+    ),
 ]
 #     path(
 #         '<int:pk>/edit/',

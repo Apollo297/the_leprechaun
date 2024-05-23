@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Профиль пользователя - {{ object.username }}
+{% endblock title %}
+
+{% block content %}
+  <div class="container">
+      <!-- Информация о пользователе -->
+      <div class="row">
+          <div class="col-12">
+              <h1>{{ object.username }}</h1>
+              <p>{{ object.bio }}</p>
+          </div>
+      </div>
+  
+      <!-- Мои накопления -->
+      <div class="row mt-4">
+          <div class="col-12">
+              <h2>Мои накопления:</h2>
+              <p>Сумма всех накоплений: {{ total_savings }}</p>
+          </div>
+      </div>
+  
+      <!-- Виды сбережений -->
+      <div class="row mt-4">
+          <div class="col-12">
+              <h2>Виды сбережений:</h2>
+              <ul>
+              {% for savings in savings_types %}
+                  <li>{{ savings.name }}: {{ savings.amount }}</li>
+              {% endfor %}
+              </ul>
+          </div>
+      </div>
+
+      <!-- Мои цели -->
+      <div class="row mt-4">
+          <div class="col-12">
+              <h2>Мои цели:</h2>
+              <div class="row">
+                  <div class="col-6">
+                      <h3>Не выполненные цели</h3>
+                      <ul>
+                      {% for goal in not_done_goals %}
+                          <li>{{ goal.title }}: {{ goal.description }}</li>
+                      {% endfor %}
+                      </ul>
+                  </div>
+                  <div class="col-6">
+                      <h3>Выполненные цели</h3>
+                      <ul>
+                      {% for goal in done_goals %}
+                          <li>{{ goal.title }}: {{ goal.description }}</li>
+                      {% endfor %}
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- История транзакций -->
+      <div class="row mt-4">
+          <div class="col-12">
+              <h2>История операций:</h2>
+              <h3>Целевые транзакции:</h3>
+              <ul>
+              {% for transaction in goal_transactions %}
+                  <li>{{ transaction.date }}: {{ transaction.amount }} - {{ transaction.description }}</li>
+              {% endfor %}
+              </ul>
+              <h3>Транзакции сбережений:</h3>
+              <ul>
+              {% for transaction in saving_transactions %}
+                  <li>{{ transaction.date }}: {{ transaction.amount }} - {{ transaction.description }}</li>
+              {% endfor %}
+              </ul>
+            </div>
+        </div>
+    </div>
+  {% endblock %}

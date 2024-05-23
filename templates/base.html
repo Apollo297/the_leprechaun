@@ -11,14 +11,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
     <title>
       {% block title %}{% endblock %}
-      <h2>Проект Лепрекон</h2>
     </title>
     <!-- Подключение bootstrap.min.css -->
-    <link rel="stylesheet" href="{% static 'static_laprechaun/css/bootstrap.min.css' %}">
-    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
   </head>
   <body>
-    {% comment %} {% include "includes/header.html" %} {% endcomment %}
+    {% include "includes/header.html" %}
     <main>
       <div class="container py-5">
         {% block content %}{% endblock %}

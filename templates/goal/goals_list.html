@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Цели накоплений
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Мои цели накоплений</h2>
+    {% if goals %}
+        <div class="list-group">
+            {% for goal in goals %}
+                <a href="{% url 'goals:goaldetail' goal.id %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ goal.title }}</h5>
+                        <small>{{ goal.pubdate|date:"d M Y" }}</small>
+                    </div>
+                    <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
+                    <small>{{ goal.getcurrencydisplay }} {{ goal.accumulated }} / {{ goal.goalamount }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>У вас пока нет поставленных целей.</p>
+    {% endif %}
+</div>
+{% endblock %}
