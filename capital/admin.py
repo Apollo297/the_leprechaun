@@ -32,10 +32,7 @@ class SavingsAdmin(admin.ModelAdmin):
         'user',
         'currency',
     )
-    list_editable = (
-        'currency',
-        # 'capital_type'
-    )
+    list_editable = ('currency',)
     search_fields = ('user',)
     list_filter = (
         'currency',
@@ -52,7 +49,7 @@ class CapitalsTransactionAdmin(admin.ModelAdmin):
         'savings',
         'repeat',
         'currency',
-        'pub_date'
+        'created_at'
     )
     list_editable = (
         'savings',

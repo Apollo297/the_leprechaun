@@ -11,8 +11,9 @@ from django.urls import reverse_lazy
 from goals.forms import GoalForm
 from goals.models import Goals
 
+PAGE_PAGINATOR = 5
 
-# добавить LoginRequiredMixin
+
 class GoalCreateView(CreateView):
     """Создание новой цели накоплений."""
 
@@ -33,10 +34,7 @@ class GoalCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
-        return reverse_lazy(
-            'users:profile',
-            kwargs={'username': self.request.user.username}
-        )
+        return reverse_lazy('users:profile')
 
     def get_form_kwargs(self):
         """
@@ -48,38 +46,22 @@ class GoalCreateView(CreateView):
         return kwargs
 
 
-# PAGE_PAGINATOR = 10
-
-
-# class CustomListMixin:
-#     model = Post
-#     paginate_by = PAGE_PAGINATOR
-
-#     def get_queryset(self):
-#         return (
-#             Post.objects.select_related(
-#                 'category', 'location', 'author'
-#             ).annotate(
-#                 comment_count=Count('comments')
-#             )
-#         ).order_by('-pub_date')
-
-
 class GoalsListView(ListView):
     """Раздел целей."""
 
     model = Goals
+    paginate_by = PAGE_PAGINATOR
     template_name = 'goal/goals_list.html'
 
     def get_queryset(self):
-        return Goals.objects.all()
+        return Goals.objects.all().order_by('-created_at')
 
-    # def get_queryset(self):
-    #     return super().get_queryset().filter(
-    #         is_published=True,
-    #         category__is_published=True,
-    #         pub_date__lte=timezone.now()
-    #     )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_goals'] = Goals.objects.all().order_by(
+            '-created_at'
+        )[:5]
+        return context
 
 
 class GoalDetailView(DetailView):

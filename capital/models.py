@@ -141,14 +141,14 @@ class CapitalsTransaction(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
     )
-    pub_date = models.DateTimeField(
+    created_at = models.DateTimeField(
         'Дата и время транзакции',
         auto_now_add=True,
         editable=False
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ('-created_at',)
         verbose_name = 'Транзакция сбережения'
         verbose_name_plural = 'Транзакции сбережений'
 

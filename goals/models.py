@@ -61,14 +61,14 @@ class GoalTransaction(models.Model):
         choices=REPEAT_CHOICES,
         default='none'
     )
-    pub_date = models.DateTimeField(
+    created_at = models.DateTimeField(
         'Дата и время транзакции',
         auto_now_add=True,
         editable=False
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ('-created_at',)
         verbose_name = 'транзакция для цели'
         verbose_name_plural = 'Транзакции для цели'
 
@@ -127,14 +127,14 @@ class Goals(models.Model):
         'Достигнута ли цель',
         default=False
     )
-    pub_date = models.DateTimeField(
+    created_at = models.DateTimeField(
         'Дата и время постановки цели',
         auto_now_add=True,
         editable=False
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ('-created_at',)
         verbose_name = 'цель'
         verbose_name_plural = 'Цели'
         constraints = (

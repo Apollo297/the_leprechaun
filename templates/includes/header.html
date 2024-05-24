@@ -27,7 +27,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if view_name == 'users:profile' %} text-white {% endif %}" href="{% url 'users:profile' user.username %}">
+              <a class="nav-link {% if view_name == 'users:profile' %} text-white {% endif %}" href="{% url 'users:profile' %}">
                 {{ user.username }}
               </a>
             </li>
