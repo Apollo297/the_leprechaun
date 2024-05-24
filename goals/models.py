@@ -6,6 +6,8 @@ from django.core.validators import (
 )
 from django.db import models
 
+from capital.models import Currency
+
 
 User = get_user_model()
 
@@ -32,7 +34,7 @@ class GoalTransaction(models.Model):
     )
     user = models.ForeignKey(
         User,
-        related_name='goal_transactions',
+        related_name='user_goal_transactions',
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
@@ -47,20 +49,26 @@ class GoalTransaction(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0.01)]
     )
+    currency = models.ForeignKey(
+        Currency,
+        related_name='currency_goal_transactions',
+        on_delete=models.CASCADE,
+        verbose_name='Валюта',
+    )
     repeat = models.CharField(
         'Повтор операции',
         max_length=20,
         choices=REPEAT_CHOICES,
         default='none'
     )
-    pub_date = models.DateTimeField(
+    created_at = models.DateTimeField(
         'Дата и время транзакции',
         auto_now_add=True,
         editable=False
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ('-created_at',)
         verbose_name = 'транзакция для цели'
         verbose_name_plural = 'Транзакции для цели'
 
@@ -76,7 +84,7 @@ class Goals(models.Model):
 
     user = models.ForeignKey(
         User,
-        related_name='goals',
+        related_name='user_goals',
         on_delete=models.CASCADE
     )
     title = models.CharField(
@@ -105,9 +113,11 @@ class Goals(models.Model):
         blank=True,
         null=True
     )
-    currency = models.CharField(
-        'Валюта',
-        max_length=10
+    currency = models.ForeignKey(
+        Currency,
+        related_name='currency_goals',
+        on_delete=models.CASCADE,
+        verbose_name='Валюта'
     )
     accumulated = models.PositiveIntegerField(
         'Накоплено',
@@ -117,14 +127,14 @@ class Goals(models.Model):
         'Достигнута ли цель',
         default=False
     )
-    pub_date = models.DateTimeField(
+    created_at = models.DateTimeField(
         'Дата и время постановки цели',
         auto_now_add=True,
         editable=False
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ('-created_at',)
         verbose_name = 'цель'
         verbose_name_plural = 'Цели'
         constraints = (

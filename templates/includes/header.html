@@ -4,36 +4,49 @@
     <div class="container">
       <a class="navbar-brand" href="{% url 'main:index' %}">
         <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-        Блогикум
+        Лепрекон
       </a>
       {% with request.resolver_match.view_name as view_name %}
-        {% comment %} <ul class="nav  nav-pills">
+        <ul class="nav nav-pills">
           <li class="nav-item">
             <a class="nav-link {% if view_name == 'pages:about' %} text-white {% endif %}" href="{% url 'pages:about' %}">
               О проекте
             </a>
           </li>
+          {% comment %}
           <li class="nav-item">
             <a class="nav-link {% if view_name == 'pages:rules' %} text-white {% endif %}" href="{% url 'pages:rules' %}">
               Правила
             </a>
-          </li> {% endcomment %}
+          </li>
+          {% endcomment %}
           {% if user.is_authenticated %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'goals:create_goal' %}">Создать цель</a></button>
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'users:profile' user.username %}">{{ user.username }}</a></button>
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'logout' %}">Выйти</a></button>
-            </div>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'goals:create_goal' %} text-white {% endif %}" href="{% url 'goals:create_goal' %}">
+                Создать цель
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'users:profile' %} text-white {% endif %}" href="{% url 'users:profile' %}">
+                {{ user.username }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'logout' %}">
+                Выйти
+              </a>
+            </li>
           {% else %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'login' %}">Войти</a></button>
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'registration' %}">Регистрация</a></button>
-            </div>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'login' %} text-white {% endif %}" href="{% url 'login' %}">
+                Войти
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'users:registration' %} text-white {% endif %}" href="{% url 'users:registration' %}">
+                Регистрация
+              </a>
+            </li>
           {% endif %}
         </ul>
       {% endwith %}

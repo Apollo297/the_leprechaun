@@ -15,7 +15,7 @@ class GoalTransactionAdmin(admin.ModelAdmin):
         'goal',
         'type',
         'repeat',
-        'pub_date'
+        'created_at'
     )
     list_editable = (
         'type',
@@ -41,7 +41,7 @@ class GoalsAdmin(admin.ModelAdmin):
         'term',
         'currency',
         'is_done',
-        'pub_date'
+        'created_at'
     )
     list_editable = ('is_done',)
     search_fields = ('title',)
@@ -71,6 +71,3 @@ class GoalsAdmin(admin.ModelAdmin):
         }),
     )
     empty_value_display = 'Не задано'
-
-
-

@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -11,8 +11,9 @@ from django.urls import reverse_lazy
 from goals.forms import GoalForm
 from goals.models import Goals
 
+PAGE_PAGINATOR = 5
 
-# добавить LoginRequiredMixin
+
 class GoalCreateView(CreateView):
     """Создание новой цели накоплений."""
 
@@ -29,11 +30,41 @@ class GoalCreateView(CreateView):
         Returns:
             Результат родительского метода form_valid.
         """
-        form.instance.author = self.request.user
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
-        return reverse_lazy(
-            'users:profile',
-            kwargs={'username': self.request.user}
-        )
+        return reverse_lazy('users:profile')
+
+    def get_form_kwargs(self):
+        """
+        Этот метод позволяет передать дополнительные аргументы в форму,
+        в частности, текущего пользователя.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+
+class GoalsListView(ListView):
+    """Раздел целей."""
+
+    model = Goals
+    paginate_by = PAGE_PAGINATOR
+    template_name = 'goal/goals_list.html'
+
+    def get_queryset(self):
+        return Goals.objects.all().order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_goals'] = Goals.objects.all().order_by(
+            '-created_at'
+        )[:5]
+        return context
+
+
+class GoalDetailView(DetailView):
+    model = Goals
+    template_name = 'goal/goal_detail.html'
+    context_object_name = 'goal'

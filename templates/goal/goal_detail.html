@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Детали цели
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ goal.title }}</h2>
+    <img src="{{ goal.image.url }}" alt="{{ goal.title }}" class="img-fluid">
+    <p>{{ goal.description }}</p>
+    <p><strong>Сумма:</strong> {{ goal.get_currency_display }} {{ goal.goal_amount }}</p>
+    <p><strong>Накоплено:</strong> {{ goal.accumulated }}</p>
+    <p><strong>Срок:</strong> {{ goal.term }} месяцев</p>
+    <p><strong>Дата постановки:</strong> {{ goal.pub_date|date:"d M Y" }}</p>
+    <p><strong>Статус:</strong> {% if goal.is_done %} Достигнута {% else %} В процессе {% endif %}</p>
+</div>
+{% endblock %}

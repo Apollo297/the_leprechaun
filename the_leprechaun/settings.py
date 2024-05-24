@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'goals.apps.GoalsConfig',
     'main.apps.MainConfig',
     'users.apps.UsersConfig',
+    'pages.apps.PagesConfig',
     'django_bootstrap5',
 ]
 
@@ -93,9 +94,19 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static_leprechaun',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.MyUser'
+
+LOGIN_REDIRECT_URL = 'main:index'
+
+LOGIN_URL = 'login'
+
+CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
 
 MIN_VALUE = 1
 
