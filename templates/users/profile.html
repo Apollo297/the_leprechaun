@@ -55,10 +55,14 @@
     </div>
   </div>
 
-  <!-- Мои цели -->
+    <!-- Мои цели -->
   <div class="row">
     <div class="col-12">
-      <h2>Мои цели </h2>
+      <h2>Мои цели 
+        {% if recent_goals %}
+          <a href="{% url 'goals:goals_list' %}" class="btn btn-primary btn-sm">Перейти к целям</a>
+        {% endif %}
+      </h2>
       {% if recent_goals %}
         <ul class="list-group">
           {% for goal in recent_goals %}
@@ -73,6 +77,7 @@
       {% endif %}
     </div>
   </div>
+
 
   <!-- История транзакций -->
   <div class="row mt-4">

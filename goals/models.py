@@ -101,7 +101,7 @@ class Goals(models.Model):
     goal_amount = models.PositiveIntegerField('Необходимая сумма')
     term = models.PositiveIntegerField(
         'Срок',
-        # Срок исчисляется в месяцах
+        help_text='В месяцах',
         validators=[
             MinValueValidator(settings.MIN_VALUE),
             MaxValueValidator(settings.MAX_VALUE)
