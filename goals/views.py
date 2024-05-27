@@ -1,4 +1,6 @@
-# from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -11,7 +13,7 @@ from django.urls import reverse_lazy
 from goals.forms import GoalForm
 from goals.models import Goals
 
-PAGE_PAGINATOR = 5
+PAGE_PAGINATOR = 10
 
 
 class GoalCreateView(CreateView):
@@ -46,25 +48,71 @@ class GoalCreateView(CreateView):
         return kwargs
 
 
-class GoalsListView(ListView):
+class GoalsListView(LoginRequiredMixin, ListView):
     """Раздел целей."""
 
     model = Goals
     paginate_by = PAGE_PAGINATOR
     template_name = 'goal/goals_list.html'
+    context_object_name = 'goals'
 
     def get_queryset(self):
-        return Goals.objects.all().order_by('-created_at')
+        return Goals.objects.filter(
+            user=self.request.user
+            ).order_by(
+                '-created_at'
+            )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['latest_goals'] = Goals.objects.all().order_by(
-            '-created_at'
-        )[:5]
+        context['recent_goals'] = Goals.objects.filter(
+            user=self.request.user
+            ).order_by(
+                '-created_at'
+            )
         return context
 
 
-class GoalDetailView(DetailView):
+class GoalDetailView(LoginRequiredMixin, DetailView):
+    """Детальная информация о цели."""
+
     model = Goals
     template_name = 'goal/goal_detail.html'
     context_object_name = 'goal'
+
+    def get_object(self):
+        user = self.request.user
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(
+            Goals,
+            pk=pk,
+            user=user
+        )
+
+
+class GoalUpdateView(LoginRequiredMixin, UpdateView):
+    """Редактирование цели."""
+
+    model = Goals
+    form_class = GoalForm
+    template_name = 'goal/new_goal.html'
+    pk_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        """
+        Ограничивает доступ к целям текущего пользователя.
+        """
+        return super().get_queryset().filter(user=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        goal = self.get_object()
+        if goal.user != self.request.user:
+            raise Http404("Цель не найдена.")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('goals:goal_detail', args=[self.kwargs['pk']])
+
+
+class GoalDeleteView(DeleteView):
+    pass

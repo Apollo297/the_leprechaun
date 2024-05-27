@@ -1,27 +1,41 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}
-Цели накоплений
+  Цели накоплений
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+  <div class="container mt-5">
     <h2>Мои цели накоплений</h2>
     {% if goals %}
-        <div class="list-group">
-            {% for goal in goals %}
-                <a href="{% url 'goals:goaldetail' goal.id %}" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ goal.title }}</h5>
-                        <small>{{ goal.pubdate|date:"d M Y" }}</small>
-                    </div>
-                    <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
-                    <small>{{ goal.getcurrencydisplay }} {{ goal.accumulated }} / {{ goal.goalamount }}</small>
-                </a>
-            {% endfor %}
-        </div>
+      <div class="list-group">
+        {% for goal in goals %}
+          <a href="{% url 'goals:goal_detail' goal.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ goal.title }}</h5>
+              <small>{{ goal.created_at|date:"d M Y" }}</small>
+            </div>
+            <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
+            <small>{{ goal.getcurrencydisplay }} {{ goal.accumulated }} / {{ goal.goal_amount|intcomma }}</small>
+          </a>
+          <ul class="list-group list-group-horizontal justify-content-center mt-2">
+            {% if user.is_authenticated %}
+              <li class="list-group-item">
+                {% comment %} <a href="{% url 'transaction' goal.id %}" class="btn btn-sm text-muted">Транзакция</a> {% endcomment %}
+              </li>
+              <li class="list-group-item">
+                <a href="{% url 'goals:edit_goal' goal.id %}" class="btn btn-sm text-muted">Редактировать цель</a>
+              </li>
+              <li class="list-group-item">
+                <a href="{% url 'goals:delete_goal' goal.id %}" class="btn btn-sm text-muted">Удалить цель</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endfor %}
+      </div>
     {% else %}
-        <p>У вас пока нет поставленных целей.</p>
+      <p>У вас пока нет поставленных целей.</p>
     {% endif %}
-</div>
+  </div>
 {% endblock %}

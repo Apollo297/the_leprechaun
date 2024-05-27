@@ -20,17 +20,17 @@ urlpatterns = [
         views.GoalDetailView.as_view(),
         name='goal_detail'
     ),
+    path(
+        '<int:pk>/edit/',
+        views.GoalUpdateView.as_view(),
+        name='edit_goal'
+    ),
+    path(
+        '<int:pk>/delete/',
+        views.GoalDeleteView.as_view(),
+        name='delete_goal'
+    ),
 ]
-#     path(
-#         '<int:pk>/edit/',
-#         views.GoalUpdateView.as_view(),
-#         name='edit_goal'
-#     ),
-#     path(
-#         '<int:pk>/delete/',
-#         views.GoalDeleteView.as_view(),
-#         name='delete_goal'
-#     ),
 #     path(
 #         '<int:pk>/',
 #         views.GoalDetailView.as_view(),

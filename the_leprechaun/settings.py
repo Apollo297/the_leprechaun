@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'django_bootstrap5',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
