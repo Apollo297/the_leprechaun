@@ -11,31 +11,37 @@
     {% if goals %}
       <div class="list-group">
         {% for goal in goals %}
-          <a href="{% url 'goals:goal_detail' goal.id %}" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{ goal.title }}</h5>
-              <small>{{ goal.created_at|date:"d M Y" }}</small>
-            </div>
-            <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
-            <small>{{ goal.getcurrencydisplay }} {{ goal.accumulated }} / {{ goal.goal_amount|intcomma }}</small>
-          </a>
-          <ul class="list-group list-group-horizontal justify-content-center mt-2">
-            {% if user.is_authenticated %}
-              <li class="list-group-item">
-                {% comment %} <a href="{% url 'transaction' goal.id %}" class="btn btn-sm text-muted">Транзакция</a> {% endcomment %}
-              </li>
-              <li class="list-group-item">
-                <a href="{% url 'goals:edit_goal' goal.id %}" class="btn btn-sm text-muted">Редактировать цель</a>
-              </li>
-              <li class="list-group-item">
-                <a href="{% url 'goals:delete_goal' goal.id %}" class="btn btn-sm text-muted">Удалить цель</a>
-              </li>
-            {% endif %}
-          </ul>
+          {% if not goal.is_completed %}
+            <a href="{% url 'goals:detail_goal' goal.id %}" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ goal.title }}</h5>
+                <small>{{ goal.created_at|date:"d M Y" }}</small>
+              </div>
+              <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
+              <small>{{ goal.get_currency_display }} {{ goal.accumulated|intcomma }} / {{ goal.goal_amount|intcomma }}</small><br>
+              <small>Осталось: {{ goal.remaining_amount|intcomma }}</small>
+            </a>
+            <ul class="list-group list-group-horizontal justify-content-center mt-2">
+              {% if user.is_authenticated %}
+                <li class="list-group-item">
+                  <a href="{% url 'goals:goal_transaction_create' goal.id %}" class="btn btn-sm text-muted">Транзакция</a>
+                </li>
+                <li class="list-group-item">
+                  <a href="{% url 'goals:edit_goal' goal.id %}" class="btn btn-sm text-muted">Редактировать</a>
+                </li>
+                <li class="list-group-item">
+                  <a href="{% url 'goals:delete_goal' goal.id %}" class="btn btn-sm text-muted">Удалить цель</a>
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
         {% endfor %}
       </div>
     {% else %}
       <p>У вас пока нет поставленных целей.</p>
     {% endif %}
+    <div class="mt-5">
+        <a href="{% url 'goals:archive_goals' %}" class="btn btn-secondary">Перейти к архиву</a>
+    </div>
   </div>
 {% endblock %}

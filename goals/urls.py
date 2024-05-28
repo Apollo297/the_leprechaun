@@ -18,7 +18,7 @@ urlpatterns = [
     path(
         '<int:pk>/',
         views.GoalDetailView.as_view(),
-        name='goal_detail'
+        name='detail_goal'
     ),
     path(
         '<int:pk>/edit/',
@@ -30,18 +30,17 @@ urlpatterns = [
         views.GoalDeleteView.as_view(),
         name='delete_goal'
     ),
+    path(
+        '<int:pk>/transactions/create/',
+        views.GoalTransactionCreateView.as_view(),
+        name='goal_transaction_create'
+    ),
+    path(
+        'archive/',
+        views.ArchiveGoalListView.as_view(),
+        name='archive_goals'
+    ),
 ]
-#     path(
-#         '<int:pk>/',
-#         views.GoalDetailView.as_view(),
-#         name='detail_goal'
-#     ),
-
-#     path(
-#         '<int:goal_id>/transactions/create/',
-#         views.GoalTransactionCreateView.as_view(),
-#         name='goal_transaction_create'
-#     ),
 #     path(
 #         '<int:goal_id>/transactions/',
 #         views.GoalTransactionListView.as_view(),

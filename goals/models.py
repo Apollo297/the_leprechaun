@@ -20,13 +20,6 @@ class GoalTransaction(models.Model):
         ('withdrawal', 'Списание')
     ]
 
-    REPEAT_CHOICES = [
-        ('daily', 'Ежедневно'),
-        ('weekly', 'Еженедельно'),
-        ('monthly', 'Ежемесячно'),
-        ('none', 'Без повтора')
-    ]
-
     goal = models.ForeignKey(
         'Goals',
         related_name='goal_transactions',
@@ -54,12 +47,6 @@ class GoalTransaction(models.Model):
         related_name='currency_goal_transactions',
         on_delete=models.CASCADE,
         verbose_name='Валюта',
-    )
-    repeat = models.CharField(
-        'Повтор операции',
-        max_length=20,
-        choices=REPEAT_CHOICES,
-        default='none'
     )
     created_at = models.DateTimeField(
         'Дата и время транзакции',
@@ -98,7 +85,12 @@ class Goals(models.Model):
         null=True,
         help_text='Необязательное поле'
     )
-    goal_amount = models.PositiveIntegerField('Необходимая сумма')
+    goal_amount = models.DecimalField(
+        'Необходимая сумма',
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
     term = models.PositiveIntegerField(
         'Срок',
         help_text='В месяцах',
@@ -119,13 +111,11 @@ class Goals(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Валюта'
     )
-    accumulated = models.PositiveIntegerField(
+    accumulated = models.DecimalField(
         'Накоплено',
+        max_digits=10,
+        decimal_places=2,
         default=0
-    )
-    is_done = models.BooleanField(
-        'Достигнута ли цель',
-        default=False
     )
     created_at = models.DateTimeField(
         'Дата и время постановки цели',
@@ -143,6 +133,12 @@ class Goals(models.Model):
                 name='Unique goal constraint',
             ),
         )
+
+    def remaining_amount(self):
+        return max(0, self.goal_amount - self.accumulated)
+
+    def is_completed(self):
+        return self.accumulated >= self.goal_amount
 
     def __str__(self):
         return self.title

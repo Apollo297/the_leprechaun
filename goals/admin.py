@@ -14,13 +14,9 @@ class GoalTransactionAdmin(admin.ModelAdmin):
         'user',
         'goal',
         'type',
-        'repeat',
         'created_at'
     )
-    list_editable = (
-        'type',
-        'repeat'
-    )
+    list_editable = ('type',)
     search_fields = ('goal', 'user',)
     list_filter = ('type',)
 
@@ -40,12 +36,9 @@ class GoalsAdmin(admin.ModelAdmin):
         'title',
         'term',
         'currency',
-        'is_done',
         'created_at'
     )
-    list_editable = ('is_done',)
     search_fields = ('title',)
-    list_filter = ('is_done',)
     list_display_links = ('title',)
     fieldsets = (
         ('Блок-1', {
@@ -66,7 +59,6 @@ class GoalsAdmin(admin.ModelAdmin):
                 'term',
                 'currency',
                 'accumulated',
-                'is_done',
             ),
         }),
     )
