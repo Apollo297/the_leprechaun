@@ -19,10 +19,12 @@ class GoalForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        # Добавляем возможность при инициализации формы передать объект
-        # пользователя через аргументы kwargs.
-        # Это позволит проверить уникальность
-        # целей не глобально, а только для данного пользователя.
+        """
+        Добавляем возможность при инициализации формы передать объект
+        пользователя через аргументы kwargs.
+        Это позволит проверить уникальность
+        целей не глобально, а только для данного пользователя.
+        """
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
@@ -44,5 +46,26 @@ class GoalTransactionForm(forms.ModelForm):
             'goal',
             'type',
             'transaction_amount',
-            'repeat'
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        transaction_type = cleaned_data.get('type')
+        transaction_amount = cleaned_data.get('transaction_amount')
+        goal = cleaned_data.get('goal')
+        if (
+            transaction_type == 'withdrawal' and
+            transaction_amount > goal.accumulated
+        ):
+            raise forms.ValidationError(
+                'Сумма списания не может превышать доступную сумму.'
+            )
+        elif (
+            transaction_type == 'deposit' and
+            transaction_amount > goal.goal_amount
+        ):
+            raise forms.ValidationError(
+                'Сумма пополнения не может превышать \
+                    установленную для накопления сумму.'
+            )
+        return cleaned_data

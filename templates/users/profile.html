@@ -67,7 +67,7 @@
         <ul class="list-group">
           {% for goal in recent_goals %}
             <li class="list-group-item">
-              <a href="{% url 'goals:goal_detail' goal.id %}">{{ goal.title }}</a> : 
+              <a href="{% url 'goals:detail_goal' goal.id %}">{{ goal.title }}</a> : 
               <small>Дата постановки цели - {{ goal.created_at|date:"d M Y" }}</small>
             </li>
           {% endfor %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+  Архив завершенных целей накоплений
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Архив завершенных целей накоплений</h2>
+    {% if goals %}
+      <div class="list-group">
+        {% for goal in goals %}
+          <a href="{% url 'goals:detail_goal' goal.id %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ goal.title }}</h5>
+              <small>{{ goal.created_at|date:"d M Y" }}</small>
+            </div>
+            <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
+            <small>{{ goal.get_currency_display }} {{ goal.accumulated|intcomma }} / {{ goal.goal_amount|intcomma }}</small>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Нет выполненных целей.</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -13,7 +13,7 @@
     {% endif %}
     <p>{{ goal.description }}</p>
     <p><strong>Сумма:</strong> {{ goal.get_currency_display }} {{ goal.goal_amount|intcomma }} {{ goal.currency.symbol }}</p>
-    <p><strong>Накоплено:</strong> {{ goal.accumulated }}</p>
+    <p><strong>Накоплено:</strong> {{ goal.accumulated|intcomma }} {{ goal.currency.symbol }}</p>
     <p><strong>Срок:</strong> {{ goal.term }} месяцев</p>
     <p><strong>Дата постановки:</strong> {{ goal.created_at|date:"d M Y" }}</p>
     <p><strong>Статус:</strong> {% if goal.is_done %} Достигнута {% else %} В процессе {% endif %}</p>
