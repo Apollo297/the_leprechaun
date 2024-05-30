@@ -66,10 +66,12 @@
       {% if recent_goals %}
         <ul class="list-group">
           {% for goal in recent_goals %}
-            <li class="list-group-item">
-              <a href="{% url 'goals:detail_goal' goal.id %}">{{ goal.title }}</a> : 
-              <small>Дата постановки цели - {{ goal.created_at|date:"d M Y" }}</small>
-            </li>
+            {% if not goal.is_completed %}
+              <li class="list-group-item">
+                <a href="{% url 'goals:detail_goal' goal.id %}">{{ goal.title }}</a> : 
+                <small>Дата постановки цели - {{ goal.created_at|date:"d M Y" }}</small>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       {% else %}

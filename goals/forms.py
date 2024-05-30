@@ -18,7 +18,7 @@ class GoalForm(forms.ModelForm):
             'pub_date'
         )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: object, **kwargs: dict[str, object]) -> None:
         """
         Добавляем возможность при инициализации формы передать объект
         пользователя через аргументы kwargs.
@@ -28,8 +28,8 @@ class GoalForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-    def clean_title(self):
-        title = self.cleaned_data['title']
+    def clean_title(self) -> str:
+        title: str = self.cleaned_data['title']
         if Goals.objects.filter(title=title, user=self.user).exists():
             raise forms.ValidationError(
                 'Цель с таким названием уже существует.'
@@ -48,10 +48,10 @@ class GoalTransactionForm(forms.ModelForm):
             'transaction_amount',
         )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        transaction_type = cleaned_data.get('type')
-        transaction_amount = cleaned_data.get('transaction_amount')
+    def clean(self) -> dict[str, object]:
+        cleaned_data: dict[str, object] = super().clean()
+        transaction_type: str | None = cleaned_data.get('type')
+        transaction_amount: int | None = cleaned_data.get('transaction_amount')
         goal = cleaned_data.get('goal')
         if (
             transaction_type == 'withdrawal' and
@@ -65,7 +65,7 @@ class GoalTransactionForm(forms.ModelForm):
             transaction_amount > goal.goal_amount
         ):
             raise forms.ValidationError(
-                'Сумма пополнения не может превышать \
-                    установленную для накопления сумму.'
+                'Сумма пополнения не может превышать '
+                'установленную для накопления сумму.'
             )
         return cleaned_data

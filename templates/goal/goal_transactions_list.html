@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Транзакции для цели: {{ goal.name }}
+{% endblock %}
+
+{% block content %}
+  <h1>Транзакции для цели: {{ goal.name }}</h1>
+  
+  {% if transactions %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Тип операции</th>
+          <th>Сумма</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for transaction in transactions %}
+        <tr>
+          <td>{{ transaction.created_at|date:"d M Y, H:i" }}</td>
+          <td>{{ transaction.get_type_display }}</td>
+          <td>
+            {% if transaction.type == 'withdrawal' %}
+              -{{ transaction.transaction_amount }}
+            {% else %}
+              {{ transaction.transaction_amount }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Транзакции не найдены.</p>
+  {% endif %}
+  {% include "includes/paginator.html" %}
+{% endblock %}

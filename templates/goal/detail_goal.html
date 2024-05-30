@@ -17,5 +17,6 @@
     <p><strong>Срок:</strong> {{ goal.term }} месяцев</p>
     <p><strong>Дата постановки:</strong> {{ goal.created_at|date:"d M Y" }}</p>
     <p><strong>Статус:</strong> {% if goal.is_done %} Достигнута {% else %} В процессе {% endif %}</p>
+    <a href="{% url 'goals:goal_transactions_list' goal.pk %}" class="btn btn-primary mt-3">История транзакций</a>
   </div>
 {% endblock %}
