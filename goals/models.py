@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import (
@@ -40,7 +42,7 @@ class GoalTransaction(models.Model):
         'Сумма транзакции',
         max_digits=10,
         decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(Decimal('0.01'))]
     )
     currency = models.ForeignKey(
         Currency,
@@ -135,9 +137,20 @@ class Goals(models.Model):
         )
 
     def remaining_amount(self):
+        """
+        Метод для вычисления оставшейся суммы до достижения цели.
+        Returns:
+            decimal.Decimal: Необходимая сумма для достижения цели,
+            либо 0, если равно цели.
+        """
         return max(0, self.goal_amount - self.accumulated)
 
     def is_completed(self):
+        """
+        Метод для проверки достижения цели.
+        Returns:
+            bool: True, если равно цели, иначе False.
+        """
         return self.accumulated >= self.goal_amount
 
     def __str__(self):

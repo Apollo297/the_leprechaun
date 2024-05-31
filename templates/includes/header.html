@@ -22,6 +22,11 @@
           {% endcomment %}
           {% if user.is_authenticated %}
             <li class="nav-item">
+              <a class="nav-link {% if view_name == 'capital:create_capital' %} text-white {% endif %}" href="{% url 'capital:create_capital' %}">
+                Новая транзакция
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link {% if view_name == 'goals:create_goal' %} text-white {% endif %}" href="{% url 'goals:create_goal' %}">
                 Создать цель
               </a>

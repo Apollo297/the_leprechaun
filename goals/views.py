@@ -24,6 +24,7 @@ from goals.models import (
     Goals,
     GoalTransaction
 )
+from goals.mixins import GoalMixin
 
 PAGE_PAGINATOR = 10
 
@@ -38,20 +39,22 @@ class GoalCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """
-        При создании поста мы не можем указывать автора вручную,
-        для этого переопределим метод валидации:
+        Переопределение метода form_valid для автоматического
+        присвоения автора цели текущему пользователю.
         Args:
-            form: Форма для валидации
+            form: Форма для создания новой цели.
         Returns:
-            Результат родительского метода form_valid.
+            HttpResponse: Результат выполнения родительского метода form_valid.
         """
         form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_form_kwargs(self):
         """
-        Этот метод позволяет передать дополнительные аргументы в форму,
-        в частности, текущего пользователя.
+        Переопределение метода get_form_kwargs для передачи дополнительных
+        аргументов в форму, в частности, текущего пользователя.
+        Returns:
+            dict: Аргументы, которые переданы в форму.
         """
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -67,64 +70,62 @@ class GoalsListView(LoginRequiredMixin, ListView):
     context_object_name = 'goals'
 
     def get_queryset(self):
+        """
+        Переопределение метода get_queryset для фильтрации целей по текущему
+        пользователю и сортировка их по дате создания в порядке убывания.
+        Returns:
+            QuerySet
+        """
         return Goals.objects.filter(
-            user=self.request.user
-            ).order_by(
+            user=self.request.user).order_by(
                 '-created_at'
             )
 
     def get_context_data(self, **kwargs):
+        """
+        Переопределение метода get_context_data для добавления дополнительных
+        данных в контекст шаблона.
+        Args:
+            **kwargs: Дополнительные аргументы контекста.
+        Returns:
+            dict: Контекст данных для передачи в шаблон.
+        """
         context = super().get_context_data(**kwargs)
         context['recent_goals'] = Goals.objects.filter(
-            user=self.request.user
-            ).order_by(
+            user=self.request.user).order_by(
                 '-created_at'
             )
         return context
 
 
-class GoalDetailView(LoginRequiredMixin, DetailView):
+class GoalDetailView(GoalMixin, DetailView):
     """Детальная информация о цели."""
 
-    model = Goals
     template_name = 'goal/detail_goal.html'
     context_object_name = 'goal'
 
-    def get_object(self):
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Goals,
-            pk=pk,
-            user=user
-        )
 
-
-class GoalUpdateView(LoginRequiredMixin, UpdateView):
+class GoalUpdateView(GoalMixin, UpdateView):
     """Редактирование цели."""
 
-    model = Goals
     form_class = GoalForm
     template_name = 'goal/new_goal.html'
     pk_url_kwarg = 'pk'
 
-    def get_object(self):
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Goals,
-            pk=pk,
-            user=user
-        )
-
     def get_success_url(self):
+        """
+        Переопределение метода get_success_url для получения URL
+        успешного редиректа после редактирования цели.
+        Returns:
+            str
+        """
         return reverse_lazy(
             'goals:detail_goal',
             args=[self.kwargs['pk']]
         )
 
 
-class GoalDeleteView(LoginRequiredMixin, DeleteView):
+class GoalDeleteView(GoalMixin, DeleteView):
     """Удаление цели."""
 
     model = Goals
@@ -133,21 +134,20 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('goals:goals_list')
 
     def get_context_data(self, **kwargs):
+        """
+        Переопределение метода get_context_data для добавления объекта
+        цели в контекст.
+        Args:
+            **kwargs: Дополнительные аргументы контекста.
+        Returns:
+            dict: Контекст данных для передачи в шаблон.
+        """
         context = super().get_context_data(**kwargs)
         context['goal'] = get_object_or_404(
             Goals,
             pk=self.kwargs['pk']
         )
         return context
-
-    def get_object(self):
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Goals,
-            pk=pk,
-            user=user
-        )
 
 
 class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
@@ -159,14 +159,29 @@ class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('goals:goals_list')
 
     def get_initial(self):
-        """Получение начальных данных формы для предварительного заполнения."""
+        """
+        Получение начальных данных формы для предварительного заполнения.
+        Returns:
+            dict
+        """
         initial = super().get_initial()
         goal_id = self.kwargs.get('pk')
         if goal_id:
-            initial['goal'] = get_object_or_404(Goals, pk=goal_id)
+            initial['goal'] = get_object_or_404(
+                Goals,
+                pk=goal_id
+            )
         return initial
 
     def form_valid(self, form):
+        """
+        Переопределение метода form_valid для обработки валидной формы и
+        обновления цели в зависимости от типа транзакции.
+        Args:
+            form: Валидная форма транзакции.
+        Returns:
+            HttpResponseRedirect: Редирект на указанный URL.
+        """
         form.instance.user = self.request.user
         form.instance.currency = form.instance.goal.currency
         goal = form.instance.goal
@@ -181,11 +196,50 @@ class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
 
 
 class ArchiveGoalListView(LoginRequiredMixin, ListView):
+    """
+    Список архивированных целей накоплений, у которых достигнута
+    целевая сумма.
+    """
+
     model = Goals
     template_name = 'goal/archive_goal_list.html'
     context_object_name = 'goals'
 
     def get_queryset(self):
+        """
+        Returns:
+            QuerySet: Список архивированных целей.
+        """
         return Goals.objects.filter(
-            Q(user=self.request.user) & Q(accumulated__gte=F('goal_amount'))
+            Q(user=self.request.user) & Q(accumulated__gte=F(
+                'goal_amount'
+            ))
         )
+
+
+class GoalTransactionsListView(LoginRequiredMixin, ListView):
+    """Список транзакций конкретной цели."""
+
+    model = GoalTransaction
+    paginate_by = PAGE_PAGINATOR
+    template_name = 'goal/goal_transactions_list.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        """
+        Переопределение метода get_queryset для фильтрации транзакций
+        по конкретной цели и их сортировка по дате создания в порядке убывания.
+        Returns:
+            QuerySet
+        """
+        self.goal = get_object_or_404(
+            Goals,
+            pk=self.kwargs['pk']
+        )
+        return GoalTransaction.objects.filter(goal=self.goal)
+
+    def get_context_data(self, **kwargs):
+        """Добавление цели в контекст шаблона ."""
+        context = super().get_context_data(**kwargs)
+        context['goal'] = self.goal
+        return context

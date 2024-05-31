@@ -2,19 +2,18 @@
 {% load django_bootstrap5 %}
 
 {% block title %}
-  Создание цели
+  Транзакция накоплений
 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
   <!-- Оформление заголовков -->
   <div class="text-center mb-4">
-    <h2 class="display-4 font-weight-bold">Создание новой цели</h2>
-    <h3 class="text-muted">Заполните форму и начните путь к цели своей мечты</h3>
-    <p class="font-italic">Помните, <q>Путешествие в тысячу миль начинается с первого шага.</q> - Лао-цзы</p>
+    <h2 class="display-4 font-weight-bold">Создание новой транзакции</h2>
+    <h3 class="text-muted">Заполните форму. Выберите вид операции и тип капитала</h3>
   </div>
 
-  <!-- Форма создания новой цели -->
+  <!-- Форма создания новой транзакции -->
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card shadow-sm p-4">
@@ -23,7 +22,7 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             <div class="text-center">
-              <button type="submit" class="btn btn-primary btn-lg">Вперёд!</button>
+              <button type="submit" class="btn btn-primary btn-lg">Отправить</button>
             </div>
           </form>
         </div>

@@ -5,11 +5,12 @@ from capital import views
 app_name = 'capital'
 
 urlpatterns = [
-    # path(
-    #     'create/',
-    #     views.CapitalCreateView.as_view(),
-    #     name='capital_goal'
-    # ),
+    path(
+        'create/',
+        views.TransactionCreateView.as_view(),
+        name='create_transaction'
+    ),
+]
     # path(
     #     '<int:capital_id>/edit/',
     #     views.CapitalUpdateView.as_view(),
@@ -52,4 +53,4 @@ urlpatterns = [
     #     views.CapitalTransactionDetailView.as_view(),
     #     name='capital_transaction_detail'
     # ),
-]
+

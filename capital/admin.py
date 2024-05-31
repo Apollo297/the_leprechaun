@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from capital.models import (
-    CapitalsTransaction,
     CapitalType,
+    CapitalsTransaction,
     Currency,
-    Savings,
+    Savings
 )
 
 TEXT = 'Детальная информация о накоплениях.'
@@ -12,58 +12,30 @@ TEXT = 'Детальная информация о накоплениях.'
 
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
-    list_display = (
-        'title',
-        'symbol',
-    )
+    list_display = ('title', 'symbol')
     list_editable = ('symbol',)
     list_filter = ('title',)
 
 
-@admin.register(CapitalType)
-class CapitalTypeAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-
-
 @admin.register(Savings)
 class SavingsAdmin(admin.ModelAdmin):
-    list_display = (
-        'capital_type',
-        'user',
-        'currency',
-    )
-    list_editable = ('currency',)
+    list_display = ('capital_type', 'user')
     search_fields = ('user',)
-    list_filter = (
-        'currency',
-        'capital_type',
-    )
+    list_filter = ('capital_type',)
     list_display_links = ('capital_type',)
 
 
 @admin.register(CapitalsTransaction)
 class CapitalsTransactionAdmin(admin.ModelAdmin):
-    list_display = (
-        'type',
-        'user',
-        'savings',
-        'repeat',
-        'currency',
-        'created_at'
-    )
-    list_editable = (
-        'savings',
-        'repeat',
-        'currency'
-    )
+    list_display = ('capital_type',)
     search_fields = ('user',)
-    list_filter = ('type', 'savings',)
+    list_filter = ('capital_type',)
     fieldsets = (
         ('Блок-1', {
             'fields': (
                 'type',
                 'user',
-                'savings',
+                'capital_type'
             ),
             'description': '%s' % TEXT,
         }),
@@ -75,9 +47,14 @@ class CapitalsTransactionAdmin(admin.ModelAdmin):
             'fields': (
                 'description',
                 'amount',
-                'currency',
-                'repeat'
+                'currency'
             ),
         }),
     )
     empty_value_display = 'Не задано'
+
+
+@admin.register(CapitalType)
+class CapitalTypeAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    filter_horizontal = ('currencies',)

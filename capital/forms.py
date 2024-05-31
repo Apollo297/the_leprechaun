@@ -4,11 +4,15 @@ from capital.models import CapitalsTransaction
 
 
 class CapitalsTransactionForm(forms.ModelForm):
-    """Форма добавления средств в накопления."""
-
     class Meta:
         model = CapitalsTransaction
-        exclude = (
-            'user',
-            'pub_data'
+        fields = (
+            'capital_type',
+            'type',
+            'description',
+            'amount',
+            'currency'
         )
+
+    def __init__(self, *args, **kwargs):
+        super(CapitalsTransactionForm, self).__init__(*args, **kwargs)
