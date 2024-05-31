@@ -20,11 +20,11 @@ from goals.forms import (
     GoalForm,
     GoalTransactionForm
 )
-from goals.mixins import GoalMixin
 from goals.models import (
     Goals,
     GoalTransaction
 )
+from goals.mixins import GoalMixin
 
 PAGE_PAGINATOR = 10
 
@@ -125,7 +125,7 @@ class GoalUpdateView(GoalMixin, UpdateView):
         )
 
 
-class GoalDeleteView(LoginRequiredMixin, DeleteView):
+class GoalDeleteView(GoalMixin, DeleteView):
     """Удаление цели."""
 
     model = Goals
@@ -148,23 +148,6 @@ class GoalDeleteView(LoginRequiredMixin, DeleteView):
             pk=self.kwargs['pk']
         )
         return context
-
-    def get_object(self):
-        """
-        Переопределение метода get_object для получения конкретной цели
-        текущего пользователя по первичному ключу (pk).
-        Returns:
-            Goals: Объект цели, отфильтрованный по pk и текущему пользователю.
-        Raises:
-            Http404: Если объект не найден.
-        """
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Goals,
-            pk=pk,
-            user=user
-        )
 
 
 class GoalTransactionCreateView(LoginRequiredMixin, CreateView):

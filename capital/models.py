@@ -26,24 +26,16 @@ class Currency(models.Model):
         return f'{self.title} ({self.symbol})'
 
 
-class CapitalType(models.Model):
-    """Модель типа капитала."""
-
-    title = models.CharField(
-        'Тип капитала',
-        max_length=settings.TRANSACTION_MAX_LENGTH
-    )
-
-    class Meta:
-        verbose_name = 'тип капитала'
-        verbose_name_plural = 'Типы капитала'
-
-    def __str__(self):
-        return self.title
-
-
 class Savings(models.Model):
     """Модель видов сбережений."""
+
+    CAPITAL_TYPE_CHOICES = [
+        ('cash', 'наличные'),
+        ('credit funds', 'кредитные средства'),
+        ('bank deposit', 'bank deposit'),
+        ('cryptocurrency', 'криптовалюта'),
+        ('bank account', 'банковский счет'),
+    ]
 
     description = models.TextField(
         'Описание',
@@ -61,12 +53,10 @@ class Savings(models.Model):
         related_name='user_savings',
         on_delete=models.CASCADE
     )
-    capital_type = models.ForeignKey(
-        CapitalType,
-        related_name='savings_type',
-        on_delete=models.CASCADE,
-        null=False,
-        verbose_name='Тип',
+    capital_type = models.CharField(
+        'Тип капитала',
+        max_length=20,
+        choices=CAPITAL_TYPE_CHOICES
     )
     currency = models.ForeignKey(
         Currency,
@@ -94,14 +84,7 @@ class CapitalsTransaction(models.Model):
         ('withdrawal', 'Списание')
     ]
 
-    REPEAT_CHOICES = [
-        ('daily', 'Ежедневно'),
-        ('weekly', 'Еженедельно'),
-        ('monthly', 'Ежемесячно'),
-        ('none', 'Без повтора')
-    ]
-
-    type = models.CharField(
+    transaction_type = models.CharField(
         'Тип операции',
         max_length=10,
         choices=TYPE_CHOICES,
@@ -116,13 +99,7 @@ class CapitalsTransaction(models.Model):
         Savings,
         related_name='savings_capital_transactions',
         on_delete=models.CASCADE,
-        verbose_name='Сбережение'
-    )
-    repeat = models.CharField(
-        'Повтор операции',
-        max_length=10,
-        choices=REPEAT_CHOICES,
-        default='none'
+        verbose_name='Тип капитала'
     )
     currency = models.ForeignKey(
         Currency,

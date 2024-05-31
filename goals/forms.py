@@ -14,7 +14,6 @@ class GoalForm(forms.ModelForm):
         exclude = (
             'user',
             'accumulated',
-            'is_done',
             'pub_date'
         )
 

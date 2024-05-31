@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from capital.models import (
     CapitalsTransaction,
-    CapitalType,
     Currency,
     Savings,
 )
@@ -18,11 +17,6 @@ class CurrencyAdmin(admin.ModelAdmin):
     )
     list_editable = ('symbol',)
     list_filter = ('title',)
-
-
-@admin.register(CapitalType)
-class CapitalTypeAdmin(admin.ModelAdmin):
-    list_display = ('title',)
 
 
 @admin.register(Savings)
@@ -44,20 +38,17 @@ class SavingsAdmin(admin.ModelAdmin):
 @admin.register(CapitalsTransaction)
 class CapitalsTransactionAdmin(admin.ModelAdmin):
     list_display = (
-        'type',
         'user',
         'savings',
-        'repeat',
         'currency',
         'created_at'
     )
     list_editable = (
         'savings',
-        'repeat',
         'currency'
     )
     search_fields = ('user',)
-    list_filter = ('type', 'savings',)
+    list_filter = ('savings',)
     fieldsets = (
         ('Блок-1', {
             'fields': (
@@ -76,7 +67,6 @@ class CapitalsTransactionAdmin(admin.ModelAdmin):
                 'description',
                 'amount',
                 'currency',
-                'repeat'
             ),
         }),
     )
