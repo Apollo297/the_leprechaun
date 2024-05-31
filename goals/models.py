@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import (
@@ -40,7 +42,7 @@ class GoalTransaction(models.Model):
         'Сумма транзакции',
         max_digits=10,
         decimal_places=2,
-        validators=[MinValueValidator(0.01)]
+        validators=[MinValueValidator(Decimal('0.01'))]
     )
     currency = models.ForeignKey(
         Currency,

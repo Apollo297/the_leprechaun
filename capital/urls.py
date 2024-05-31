@@ -7,8 +7,8 @@ app_name = 'capital'
 urlpatterns = [
     path(
         'create/',
-        views.CapitalCreateView.as_view(),
-        name='create_capital'
+        views.TransactionCreateView.as_view(),
+        name='create_transaction'
     ),
 ]
     # path(

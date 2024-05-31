@@ -14,7 +14,7 @@ class GoalForm(forms.ModelForm):
         exclude = (
             'user',
             'accumulated',
-            'pub_date'
+            'created_at'
         )
 
     def __init__(self, *args: object, **kwargs: dict[str, object]) -> None:
