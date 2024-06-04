@@ -17,6 +17,9 @@
     <p><strong>Срок:</strong> {{ goal.term }} месяцев</p>
     <p><strong>Дата постановки:</strong> {{ goal.created_at|date:"d M Y" }}</p>
     <p><strong>Статус:</strong> {% if goal.is_completed %} Достигнута {% else %} В процессе {% endif %}</p>
-    <a href="{% url 'goals:goal_transactions_list' goal.pk %}" class="btn btn-primary mt-3">История транзакций</a>
+    <a href="{% url 'goals:goal_transactions_list' goal.id %}" class="btn btn-primary mt-3">История транзакций</a>
+    {% if goal.is_completed %}
+      <a href="{% url 'goals:archive_goals_delete' goal.id %}" class="btn btn-danger btn-primary mt-3">Удалить</a>
+    {% endif %}
   </div>
 {% endblock %}

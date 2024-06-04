@@ -6,7 +6,7 @@
 
   <form method="post">
     {% csrf_token %}
-    <button class="btn btn-primary btn-sm">Удалить</button>
+    <button class="btn btn-danger btn-sm">Удалить</button>
     <a href="{% url 'goals:goals_list' %}" class="btn btn-secondary btn-sm ml-2">Отменить</a>
   </form>
 {% endblock %}

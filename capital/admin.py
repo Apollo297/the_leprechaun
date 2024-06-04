@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from capital.models import (
+    Capital,
     CapitalType,
     CapitalsTransaction,
     Currency,
-    Savings
 )
 
 TEXT = 'Детальная информация о накоплениях.'
@@ -17,19 +17,17 @@ class CurrencyAdmin(admin.ModelAdmin):
     list_filter = ('title',)
 
 
-@admin.register(Savings)
-class SavingsAdmin(admin.ModelAdmin):
-    list_display = ('capital_type', 'user')
+@admin.register(Capital)
+class CapitalAdmin(admin.ModelAdmin):
+    list_display = ('user',)
     search_fields = ('user',)
-    list_filter = ('capital_type',)
-    list_display_links = ('capital_type',)
 
 
 @admin.register(CapitalsTransaction)
 class CapitalsTransactionAdmin(admin.ModelAdmin):
-    list_display = ('capital_type',)
+    list_display = ('capital',)
     search_fields = ('user',)
-    list_filter = ('capital_type',)
+    list_filter = ('capital',)
     fieldsets = (
         ('Блок-1', {
             'fields': (
@@ -54,7 +52,9 @@ class CapitalsTransactionAdmin(admin.ModelAdmin):
     empty_value_display = 'Не задано'
 
 
-@admin.register(CapitalType)
+
 class CapitalTypeAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    filter_horizontal = ('currencies',)
+    fields = ('title',)
+
+
+admin.site.register(CapitalType, CapitalTypeAdmin)

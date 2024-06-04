@@ -18,8 +18,8 @@
                 <small>{{ goal.created_at|date:"d M Y" }}</small>
               </div>
               <p class="mb-1">{{ goal.description|truncatewords:20 }}</p>
-              <small>{{ goal.get_currency_display }} {{ goal.accumulated|intcomma }} / {{ goal.goal_amount|intcomma }}</small><br>
-              <small>Осталось: {{ goal.remaining_amount|intcomma }}</small>
+              <small>{{ goal.get_currency_display }} {{ goal.accumulated|intcomma }} / {{ goal.goal_amount|intcomma }} {{ goal.currency.symbol }}</small><br>
+              <small>Осталось: {{ goal.remaining_amount|intcomma }} {{ goal.currency.symbol }}</small>
             </a>
             <ul class="list-group list-group-horizontal justify-content-center mt-2">
               {% if user.is_authenticated %}

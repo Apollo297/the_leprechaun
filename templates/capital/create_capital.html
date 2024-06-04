@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}
+  Новый капитал
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Оформление заголовков -->
+  <div class="text-center mb-4">
+    <h2 class="display-4 font-weight-bold">Создание нового вида капитала</h2>
+  </div>
+
+  <!-- Форма создания  -->
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm p-4">
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-lg">Отправить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

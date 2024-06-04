@@ -7,6 +7,7 @@ from django.views.generic import (
     UpdateView
 )
 
+from capital.models import Capital
 from goals.models import Goals
 from users.forms import (
     CustomUserCreationForm,
@@ -35,11 +36,14 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profile'] = self.request.user
+        context['my_capitals'] = Capital.objects.filter(
+            user=self.request.user
+        )
         context['recent_goals'] = Goals.objects.filter(
             user=self.request.user
             ).order_by(
                 '-created_at'
-            )[:5]
+            )[:6]
         return context
 
     def get_object(self, queryset=None):

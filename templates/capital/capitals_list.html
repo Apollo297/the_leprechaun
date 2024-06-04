@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+  Виды сбережений
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Мои сбережения</h2>
+    {% if my_capitals %}
+      <div class="list-group">
+        {% for capital in my_capitals %}
+          <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{ capital.capital_type }}</h5>
+          </div>
+          <p class="mb-1">{{ capital.description|truncatewords:30 }}</p><br>
+          <small> {{ capital.total_amount|intcomma }} {{ capital.currency }}</small>
+          <ul class="list-group list-group-horizontal justify-content-center mt-2">
+              {% if user.is_authenticated %}
+              <li class="list-group-item">
+                  {% comment %} <a href="{% url 'capital:capital_transaction_create' capital.id %}" class="btn btn-sm text-muted">Транзакция</a> {% endcomment %}
+              </li>
+              <li class="list-group-item">
+                  <a href="{% url 'capital:edit_capital' capital.id %}" class="btn btn-sm text-muted">Редактировать</a>
+              </li>
+              <li class="list-group-item">
+                {% comment %} <a href="{% url 'capital:capital_transactions_list' capital.id %}" class="btn btn-sm text-muted">История транзакций</a> {% endcomment %}
+            </li>
+              <li class="list-group-item">
+                  {% comment %} <a href="{% url 'capital:delete_capital' capital.id %}" class="btn btn-sm text-muted">Удалить тип сбережений</a> {% endcomment %}
+              </li>
+              {% endif %}
+          </ul>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>У вас пока нет сбережений.</p>
+    {% endif %}
+  </div>
+  {% include "includes/paginator.html" %}
+{% endblock %}

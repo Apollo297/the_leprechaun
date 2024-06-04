@@ -7,26 +7,30 @@ app_name = 'capital'
 urlpatterns = [
     path(
         'create/',
-        views.TransactionCreateView.as_view(),
-        name='create_transaction'
+        views.CapitalCreateView.as_view(),
+        name='create_capital'
     ),
-]
-    # path(
-    #     '<int:capital_id>/edit/',
-    #     views.CapitalUpdateView.as_view(),
-    #     name='edit_capital'
-    # ),
-    # path(
-    #     '<int:capital_id>/delete/',
-    #     views.CapitalDeleteView.as_view(),
-    #     name='delete_capital'
-    # ),
+    path(
+        'my_capital',
+        views.CapitalsListView.as_view(),
+        name='capitals_list'
+    ),
+    path(
+        '<int:pk>/edit/',
+        views.CapitalUpdateView.as_view(),
+        name='edit_capital'
+    ),
     # path(
     #     '<int:pk>/',
     #     views.CapitalDetailView.as_view(),
     #     name='detail_capital'
     # ),
-
+    # path(
+    #     '<int:pk>/delete/',
+    #     views.CapitalDeleteView.as_view(),
+    #     name='delete_capital'
+    # ),
+]
     # path(
     #     '<int:capital_id>/transactions/create/',
     #     views.CapitalTransactionCreateView.as_view(),

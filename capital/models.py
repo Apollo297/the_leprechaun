@@ -13,11 +13,11 @@ class Currency(models.Model):
 
     title = models.CharField(
         'Валюта',
-        max_length=settings.TRANSACTION_MAX_LENGTH
+        max_length=3,
     )
     symbol = models.CharField(
         'Символ',
-        max_length=10
+        max_length=1
     )
 
     class Meta:
@@ -35,11 +35,6 @@ class CapitalType(models.Model):
         'Тип капитала',
         max_length=settings.TRANSACTION_MAX_LENGTH
     )
-    currencies = models.ManyToManyField(
-        Currency,
-        verbose_name='Доступные валюты',
-        related_name='capital_types'
-    )
 
     class Meta:
         verbose_name = 'Тип капитала'
@@ -49,23 +44,25 @@ class CapitalType(models.Model):
         return self.title
 
 
-class Savings(models.Model):
-    """
-    Модель для хранения информации о конкретных видах
-    сбережений пользователя.
-    """
-
+class Capital(models.Model):
+    """Модель капитала пользователя."""
     user = models.ForeignKey(
         User,
-        related_name='user_savings',
+        related_name='capitals',
         on_delete=models.CASCADE,
         verbose_name='Пользователь'
     )
     capital_type = models.ForeignKey(
         CapitalType,
-        related_name='capital_type_savings',
+        related_name='capitals',
         on_delete=models.CASCADE,
         verbose_name='Тип капитала'
+    )
+    currency = models.ForeignKey(
+        Currency,
+        related_name='capitals',
+        on_delete=models.CASCADE,
+        verbose_name='Валюта'
     )
     description = models.TextField(
         'Описание',
@@ -74,8 +71,14 @@ class Savings(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Сбережения'
-        verbose_name_plural = 'Сбережения'
+        verbose_name = 'Капитал'
+        verbose_name_plural = 'Капиталы'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'capital_type', 'currency'),
+                name='unique_user_capital_type_currency'
+            ),
+        ]
 
     @property
     def total_amount(self):
@@ -86,7 +89,12 @@ class Savings(models.Model):
         )
 
     def __str__(self):
-        return f'{self.user} - {self.capital_type} - {self.total_amount}'
+        return (
+            f'{self.user} - '
+            f'{self.capital_type} - '
+            f'{self.currency} - '
+            f'{self.total_amount}'
+        )
 
 
 class CapitalsTransaction(models.Model):
@@ -97,11 +105,11 @@ class CapitalsTransaction(models.Model):
         ('withdrawal', 'Списание')
     ]
 
-    capital_type = models.ForeignKey(
-        CapitalType,
-        related_name='transaction_capital_type',
+    capital = models.ForeignKey(
+        Capital,
+        related_name='transactions',
         on_delete=models.CASCADE,
-        verbose_name='Тип капитала'
+        verbose_name='Капитал'
     )
     type = models.CharField(
         'Тип операции',
@@ -122,12 +130,13 @@ class CapitalsTransaction(models.Model):
     currency = models.ForeignKey(
         Currency,
         on_delete=models.CASCADE,
+        related_name='transactions',
         verbose_name='Валюта'
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user_transactions'
+        related_name='transactions',
     )
     created_at = models.DateTimeField(
         'Дата и время транзакции',
@@ -140,4 +149,4 @@ class CapitalsTransaction(models.Model):
         verbose_name_plural = 'Транзакции сбережений'
 
     def __str__(self):
-        return f'{self.user} - {self.type} - {self.amount}'
+        return f'{self.capital} - {self.type} - {self.amount}'

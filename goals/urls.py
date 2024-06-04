@@ -44,5 +44,10 @@ urlpatterns = [
         'archive/',
         views.ArchiveGoalListView.as_view(),
         name='archive_goals'
+    ),
+    path(
+        'archive/<int:pk>/delete/',
+        views.ArchiveGoalDeleteView.as_view(),
+        name='archive_goals_delete'
     )
 ]

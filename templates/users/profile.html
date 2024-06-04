@@ -35,22 +35,22 @@
     </div>
   </div>
 
-  <!-- Мои накопления -->
-  <div class="row mt-4">
-    <div class="col-12">
-      <h2>Мои накопления:</h2>
-      <p>Сумма всех накоплений: {{ total_savings }}</p>
-    </div>
-  </div>
 
   <!-- Виды сбережений -->
   <div class="row mt-4">
     <div class="col-12">
-      <h2>Виды сбережений:</h2>
-      <ul>
-        {% for savings in savings_types %}
-          <li>{{ savings.name }}: {{ savings.amount }}</li>
+      <h2>Виды сбережений:
+        {% if my_capitals %}
+          <a href="{% url 'capital:capitals_list' %}" class="btn btn-primary btn-sm">Перейти к сбережениям</a>
+        {% endif %}
+      </h2>
+      {% if my_capitals %}
+        {% for capital in my_capitals %}
+          <li>{{ capital.capital_type }} {{ capital.currency }}: {{ capital.total_amount }}</li>
         {% endfor %}
+      {% else %}
+        <p>У вас пока нет сбережений.</p>
+      {% endif %}
       </ul>
     </div>
   </div>

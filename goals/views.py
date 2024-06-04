@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import (
     Q,
@@ -9,7 +10,6 @@ from django.shortcuts import (
 )
 from django.views.generic import (
     CreateView,
-    DeleteView,
     DetailView,
     ListView,
     UpdateView
@@ -24,9 +24,10 @@ from goals.models import (
     Goals,
     GoalTransaction
 )
-from goals.mixins import GoalMixin
-
-PAGE_PAGINATOR = 10
+from goals.mixins import (
+    GoalDeleteViewMixin,
+    GoalMixin
+)
 
 
 class GoalCreateView(LoginRequiredMixin, CreateView):
@@ -65,7 +66,7 @@ class GoalsListView(LoginRequiredMixin, ListView):
     """Раздел целей."""
 
     model = Goals
-    paginate_by = PAGE_PAGINATOR
+    paginate_by = settings.PAGE_PAGINATOR
     template_name = 'goal/goals_list.html'
     context_object_name = 'goals'
 
@@ -125,29 +126,10 @@ class GoalUpdateView(GoalMixin, UpdateView):
         )
 
 
-class GoalDeleteView(GoalMixin, DeleteView):
+class GoalDeleteView(GoalDeleteViewMixin):
     """Удаление цели."""
 
-    model = Goals
-    template_name = 'goal/delete_goal_confirm.html'
-    pk_url_kwarg = 'pk'
     success_url = reverse_lazy('goals:goals_list')
-
-    def get_context_data(self, **kwargs):
-        """
-        Переопределение метода get_context_data для добавления объекта
-        цели в контекст.
-        Args:
-            **kwargs: Дополнительные аргументы контекста.
-        Returns:
-            dict: Контекст данных для передачи в шаблон.
-        """
-        context = super().get_context_data(**kwargs)
-        context['goal'] = get_object_or_404(
-            Goals,
-            pk=self.kwargs['pk']
-        )
-        return context
 
 
 class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
@@ -185,6 +167,7 @@ class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         form.instance.currency = form.instance.goal.currency
         goal = form.instance.goal
+        response = super().form_valid(form)
         if form.instance.type == 'deposit':
             goal.accumulated += form.instance.transaction_amount
         elif form.instance.type == 'withdrawal':
@@ -192,7 +175,7 @@ class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
         goal.save()
         if goal.is_completed():
             return redirect('goals:archive_goals')
-        return super().form_valid(form)
+        return response
 
 
 class ArchiveGoalListView(LoginRequiredMixin, ListView):
@@ -221,7 +204,7 @@ class GoalTransactionsListView(LoginRequiredMixin, ListView):
     """Список транзакций конкретной цели."""
 
     model = GoalTransaction
-    paginate_by = PAGE_PAGINATOR
+    paginate_by = settings.PAGE_PAGINATOR
     template_name = 'goal/goal_transactions_list.html'
     context_object_name = 'transactions'
 
@@ -236,10 +219,20 @@ class GoalTransactionsListView(LoginRequiredMixin, ListView):
             Goals,
             pk=self.kwargs['pk']
         )
-        return GoalTransaction.objects.filter(goal=self.goal)
+        return GoalTransaction.objects.filter(
+            goal=self.goal
+            ).order_by(
+                '-created_at'
+        )
 
     def get_context_data(self, **kwargs):
         """Добавление цели в контекст шаблона ."""
         context = super().get_context_data(**kwargs)
         context['goal'] = self.goal
         return context
+
+
+class ArchiveGoalDeleteView(GoalDeleteViewMixin):
+    """Удаление цели из архива."""
+
+    success_url = reverse_lazy('goals:archive_goals')
