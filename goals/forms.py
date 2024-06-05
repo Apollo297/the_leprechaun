@@ -37,7 +37,7 @@ class GoalForm(forms.ModelForm):
 
 
 class GoalTransactionForm(forms.ModelForm):
-    """Форма добавления средств к цели."""
+    """Форма совершения транзакции цели."""
 
     class Meta:
         model = GoalTransaction

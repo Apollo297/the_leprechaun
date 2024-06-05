@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import (
     CreateView,
+    DeleteView,
     UpdateView,
     ListView
 )
@@ -10,9 +11,13 @@ from django.urls import reverse_lazy
 
 from capital.forms import (
     CapitalCreateForm,
+    CapitalTransactionForm,
     CapitalUpdateForm
 )
-from capital.models import Capital
+from capital.models import (
+    Capital,
+    CapitalsTransaction
+)
 
 
 class CapitalCreateView(LoginRequiredMixin, CreateView):
@@ -64,3 +69,82 @@ class CapitalUpdateView(LoginRequiredMixin, UpdateView):
             pk=pk,
             user=user
         )
+
+
+class CapitalDeleteView(LoginRequiredMixin, DeleteView):
+    """Удаление капитала."""
+
+    model = Capital
+    template_name = 'capital/delete_capital_confirm.html'
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('capital:capitals_list')
+
+    def get_object(self):
+        user = self.request.user
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(
+            Capital,
+            pk=pk,
+            user=user
+        )
+
+
+class CapitalTransactionCreateView(LoginRequiredMixin, CreateView):
+    """Создание транзакции цели накоплений."""
+
+    model = CapitalsTransaction
+    form_class = CapitalTransactionForm
+    template_name = 'capital/new_capital_transaction.html'
+    success_url = reverse_lazy('capital:capitals_list')
+
+    def get_initial(self):
+        """
+        Получение начальных данных формы для предварительного заполнения.
+        Returns:
+            dict
+        """
+        initial = super().get_initial()
+        capital_id = self.kwargs.get('pk')
+        if capital_id:
+            initial['capital'] = get_object_or_404(
+                Capital,
+                pk=capital_id
+            )
+        return initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.currency = form.instance.capital.currency
+        return super().form_valid(form)
+
+
+class CapitalTransactionsListView(LoginRequiredMixin, ListView):
+    """Список транзакций конкретной типа капитала."""
+
+    model = CapitalsTransaction
+    paginate_by = settings.PAGE_PAGINATOR
+    template_name = 'capital/capital_transactions_list.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        """Фильтруем транзакции по выбранному капиталу."""
+        capital_id = self.kwargs.get('pk')
+        capital = get_object_or_404(
+            Capital,
+            pk=capital_id
+        )
+        return CapitalsTransaction.objects.filter(
+            capital=capital
+            ).order_by(
+                '-created_at'
+        )
+
+    def get_context_data(self, **kwargs):
+        """Добавляем капитал в контекст."""
+        context = super().get_context_data(**kwargs)
+        capital_id = self.kwargs.get('pk')
+        context['capital'] = get_object_or_404(
+            Capital,
+            pk=capital_id
+        )
+        return context

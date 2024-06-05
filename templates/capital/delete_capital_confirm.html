@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Удалить тип капитала?</h1>
+  <p>Вы уверены, что хотите удалить тип капитала "{{ capital.capital_type }}"?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger btn-sm">Удалить</button>
+    <a href="{% url 'goals:goals_list' %}" class="btn btn-secondary btn-sm ml-2">Отменить</a>
+  </form>
+{% endblock %}
+
+
+

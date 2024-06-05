@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Транзакции цели: {{ goal.title }}
+  Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
 {% endblock %}
 
 {% block content %}
-  <h1>Транзакции цели: {{ goal.title }}</h1>
+  {% comment %} <h1>Транзакции для цели: {{ goal.name }}</h1>
   
   {% if transactions %}
     <table class="table">
@@ -35,5 +35,5 @@
   {% else %}
     <p>Транзакции не найдены.</p>
   {% endif %}
-  {% include "includes/paginator.html" %}
+  {% include "includes/paginator.html" %} {% endcomment %}
 {% endblock %}

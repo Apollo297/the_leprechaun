@@ -76,7 +76,7 @@ class Capital(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'capital_type', 'currency'),
-                name='unique_user_capital_type_currency'
+                name='Unique user capital type currency'
             ),
         ]
 
@@ -90,10 +90,9 @@ class Capital(models.Model):
 
     def __str__(self):
         return (
-            f'{self.user} - '
             f'{self.capital_type} - '
-            f'{self.currency} - '
-            f'{self.total_amount}'
+            f'{self.currency}: '
+            f'{self.total_amount} '
         )
 
 

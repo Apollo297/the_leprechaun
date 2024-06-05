@@ -19,7 +19,7 @@
           <ul class="list-group list-group-horizontal justify-content-center mt-2">
               {% if user.is_authenticated %}
               <li class="list-group-item">
-                  {% comment %} <a href="{% url 'capital:capital_transaction_create' capital.id %}" class="btn btn-sm text-muted">Транзакция</a> {% endcomment %}
+                  <a href="{% url 'capital:capital_transaction_create' capital.id %}" class="btn btn-sm text-muted">Транзакция</a>
               </li>
               <li class="list-group-item">
                   <a href="{% url 'capital:edit_capital' capital.id %}" class="btn btn-sm text-muted">Редактировать</a>
@@ -28,7 +28,7 @@
                 {% comment %} <a href="{% url 'capital:capital_transactions_list' capital.id %}" class="btn btn-sm text-muted">История транзакций</a> {% endcomment %}
             </li>
               <li class="list-group-item">
-                  {% comment %} <a href="{% url 'capital:delete_capital' capital.id %}" class="btn btn-sm text-muted">Удалить тип сбережений</a> {% endcomment %}
+                  <a href="{% url 'capital:delete_capital' capital.id %}" class="btn btn-sm text-muted">Удалить</a>
               </li>
               {% endif %}
           </ul>

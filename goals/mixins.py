@@ -29,7 +29,6 @@ class GoalMixin(LoginRequiredMixin):
 class GoalDeleteViewMixin(GoalMixin, DeleteView):
     """Миксин удаления."""
 
-    model = Goals
     template_name = 'goal/delete_goal_confirm.html'
     pk_url_kwarg = 'pk'
 

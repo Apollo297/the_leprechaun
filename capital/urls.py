@@ -20,26 +20,32 @@ urlpatterns = [
         views.CapitalUpdateView.as_view(),
         name='edit_capital'
     ),
+    path(
+        '<int:pk>/delete/',
+        views.CapitalDeleteView.as_view(),
+        name='delete_capital'
+    ),
+    path(
+        '<int:pk>/transactions/create/',
+        views.CapitalTransactionCreateView.as_view(),
+        name='capital_transaction_create'
+    ),
+    path(
+        '<int:pk>/transactions/',
+        views.CapitalTransactionsListView.as_view(),
+        name='capital_transactions_list'
+    ),
+]
     # path(
     #     '<int:pk>/',
     #     views.CapitalDetailView.as_view(),
     #     name='detail_capital'
     # ),
-    # path(
-    #     '<int:pk>/delete/',
-    #     views.CapitalDeleteView.as_view(),
-    #     name='delete_capital'
-    # ),
-]
+
     # path(
     #     '<int:capital_id>/transactions/create/',
     #     views.CapitalTransactionCreateView.as_view(),
     #     name='capital_transaction_create'
-    # ),
-    # path(
-    #     '<int:capital_id>/transactions/',
-    #     views.CapitalTransactionListView.as_view(),
-    #     name='capital_transaction_list'
     # ),
 
     # path(
@@ -57,4 +63,3 @@ urlpatterns = [
     #     views.CapitalTransactionDetailView.as_view(),
     #     name='capital_transaction_detail'
     # ),
-

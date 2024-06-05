@@ -1,6 +1,9 @@
 from django import forms
 
-from capital.models import Capital
+from capital.models import (
+    Capital,
+    CapitalsTransaction
+)
 
 
 class CapitalCreateForm(forms.ModelForm):
@@ -42,3 +45,37 @@ class CapitalUpdateForm(forms.ModelForm):
     class Meta:
         model = Capital
         fields = ('description',)
+
+
+class CapitalTransactionForm(forms.ModelForm):
+    """Форма транзакции типа капитала."""
+
+    class Meta:
+        model = CapitalsTransaction
+        fields = (
+            'capital',
+            'type',
+            'description',
+            'amount',
+        )
+
+    def clean(self) -> dict[str, object]:
+        cleaned_data = super().clean()
+        transaction_type = cleaned_data.get('type')
+        transaction_amount = cleaned_data.get('amount')
+        capital = cleaned_data.get('capital')
+        if (
+            transaction_type == 'withdrawal' and
+            transaction_amount > capital.total_amount
+        ):
+            raise forms.ValidationError(
+                'Сумма списания не может превышать доступную сумму.'
+            )
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.currency = self.cleaned_data['capital'].currency
+        if commit:
+            instance.save()
+        return instance
