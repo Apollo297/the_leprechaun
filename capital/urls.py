@@ -35,31 +35,9 @@ urlpatterns = [
         views.CapitalTransactionsListView.as_view(),
         name='capital_transactions_list'
     ),
+    path(
+        'transactions/<int:pk>/',
+        views.CapitalTransactionDetailView.as_view(),
+        name='capital_transaction_detail'
+    ),
 ]
-    # path(
-    #     '<int:pk>/',
-    #     views.CapitalDetailView.as_view(),
-    #     name='detail_capital'
-    # ),
-
-    # path(
-    #     '<int:capital_id>/transactions/create/',
-    #     views.CapitalTransactionCreateView.as_view(),
-    #     name='capital_transaction_create'
-    # ),
-
-    # path(
-    #     'transactions/<int:transaction_id>/edit/',
-    #     views.CapitalTransactionUpdateView.as_view(),
-    #     name='capital_transaction_edit'
-    # ),
-    # path(
-    #     'transactions/<int:transaction_id>/delete/',
-    #     views.CapitalTransactionDeleteView.as_view(),
-    #     name='capital_transaction_delete'
-    # ),
-    # path(
-    #     'transactions/<int:transaction_id>/',
-    #     views.CapitalTransactionDetailView.as_view(),
-    #     name='capital_transaction_detail'
-    # ),

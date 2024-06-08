@@ -1,70 +1,33 @@
-{% extends 'base.html' %}
+  {% extends 'base.html' %}
 
-{% block title %}
-  Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
-{% endblock %}
+  {% block title %}
+    Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
+  {% endblock %}
 
-{% block content %}
-  <h1>Транзакции для: {{ capital.capital_type }}</h1>
-  
-  {% if transactions %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Дата</th>
-          <th>Тип операции</th>
-          <th>Сумма</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for transaction in transactions %}
-        <tr>
-          <td>{{ transaction.created_at|date:"d M Y, H:i" }}</td>
-          <td>{{ transaction.get_type_display }}</td>
-          <td>{{ transaction.amount }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Транзакции не найдены.</p>
-  {% endif %}
-  {% include "includes/paginator.html" %}
-{% endblock %}
-
-{% comment %} {% extends 'base.html' %}
-
-{% block title %}
-  Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
-{% endblock %}
-
-{% block content %}
-  <h1>Транзакции для: {{ capital.capital_type }}</h1>
-  
-  <p>Текущий капитал ID: {{ capital.id }}</p>
-  <p>Найдено транзакций: {{ transactions|length }}</p>
-
-  {% if transactions %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Дата</th>
-          <th>Тип операции</th>
-          <th>Сумма</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for transaction in transactions %}
-        <tr>
-          <td>{{ transaction.created_at|date:"d M Y, H:i" }}</td>
-          <td>{{ transaction.get_type_display }}</td>
-          <td>{{ transaction.amount }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Транзакции не найдены.</p>
-  {% endif %}
-  {% include "includes/paginator.html" %}
-{% endblock %} {% endcomment %}
+  {% block content %}
+    <h1>Транзакции для: {{ capital.capital_type }}</h1>
+    
+    {% if transactions %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Тип операции</th>
+            <th>Сумма</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in transactions %}
+          <tr>
+            <td><a href="{% url 'capital:capital_transaction_detail' transaction.id %}">{{ transaction.created_at|date:"d M Y, H:i" }}</a></td>
+            <td>{{ transaction.get_type_display }}</td>
+            <td>{{ transaction.amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Транзакции не найдены.</p>
+    {% endif %}
+    {% include "includes/paginator.html" %}
+  {% endblock %}

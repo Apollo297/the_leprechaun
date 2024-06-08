@@ -13,13 +13,6 @@
               О проекте
             </a>
           </li>
-          {% comment %}
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:rules' %} text-white {% endif %}" href="{% url 'pages:rules' %}">
-              Правила
-            </a>
-          </li>
-          {% endcomment %}
           {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link {% if view_name == 'capital:create_capital' %} text-white {% endif %}" href="{% url 'capital:create_capital' %}">

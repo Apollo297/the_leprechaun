@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import (
     CreateView,
     DeleteView,
+    DetailView,
     UpdateView,
     ListView
 )
@@ -14,6 +15,7 @@ from capital.forms import (
     CapitalTransactionForm,
     CapitalUpdateForm
 )
+from capital.mixins import CapitalMixin
 from capital.models import (
     Capital,
     CapitalsTransaction
@@ -52,41 +54,17 @@ class CapitalsListView(LoginRequiredMixin, ListView):
         )
 
 
-class CapitalUpdateView(LoginRequiredMixin, UpdateView):
-    """Редактирование цели."""
+class CapitalUpdateView(CapitalMixin, UpdateView):
+    """Редактирование типа капитала."""
 
-    model = Capital
     form_class = CapitalUpdateForm
     template_name = 'capital/update_capital.html'
-    pk_url_kwarg = 'pk'
-    success_url = reverse_lazy('capital:capitals_list')
-
-    def get_object(self):
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Capital,
-            pk=pk,
-            user=user
-        )
 
 
-class CapitalDeleteView(LoginRequiredMixin, DeleteView):
+class CapitalDeleteView(CapitalMixin, DeleteView):
     """Удаление капитала."""
 
-    model = Capital
     template_name = 'capital/delete_capital_confirm.html'
-    pk_url_kwarg = 'pk'
-    success_url = reverse_lazy('capital:capitals_list')
-
-    def get_object(self):
-        user = self.request.user
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(
-            Capital,
-            pk=pk,
-            user=user
-        )
 
 
 class CapitalTransactionCreateView(LoginRequiredMixin, CreateView):
@@ -98,11 +76,6 @@ class CapitalTransactionCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('capital:capitals_list')
 
     def get_initial(self):
-        """
-        Получение начальных данных формы для предварительного заполнения.
-        Returns:
-            dict
-        """
         initial = super().get_initial()
         capital_id = self.kwargs.get('pk')
         if capital_id:
@@ -148,3 +121,20 @@ class CapitalTransactionsListView(LoginRequiredMixin, ListView):
             pk=capital_id
         )
         return context
+
+
+class CapitalTransactionDetailView(LoginRequiredMixin, DetailView):
+    """Детальная информация о транзакции капитала."""
+
+    model = CapitalsTransaction
+    template_name = 'capital/detail_capital_transaction.html'
+    context_object_name = 'transaction'
+
+    def get_object(self):
+        user = self.request.user
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(
+            CapitalsTransaction,
+            pk=pk,
+            user=user
+        )

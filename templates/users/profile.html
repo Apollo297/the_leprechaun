@@ -31,7 +31,11 @@
           {% endif %}
         </ul>
       </small>
-      <p>{{ object.bio }}</p>
+      {% if profile.bio %}
+        <p>{{ profile.bio }}</p>
+      {% else %}
+        <p> Добавьте описание профиля </p>
+      {% endif %}
     </div>
   </div>
 
@@ -77,26 +81,6 @@
       {% else %}
         <p>У вас пока нет поставленных целей.</p>
       {% endif %}
-    </div>
-  </div>
-
-
-  <!-- История транзакций -->
-  <div class="row mt-4">
-    <div class="col-12">
-      <h2>История операций:</h2>
-      <h3>Целевые транзакции:</h3>
-      <ul>
-        {% for transaction in goal_transactions %}
-          <li>{{ transaction.date }}: {{ transaction.amount }} - {{ transaction.description }}</li>
-        {% endfor %}
-      </ul>
-      <h3>Транзакции сбережений:</h3>
-      <ul>
-        {% for transaction in saving_transactions %}
-          <li>{{ transaction.date }}: {{ transaction.amount }} - {{ transaction.description }}</li>
-        {% endfor %}
-      </ul>
     </div>
   </div>
 </div>

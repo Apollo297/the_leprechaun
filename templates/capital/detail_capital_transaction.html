@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+  Описание транзакции
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>{{ transaction.capital }}</h2>
+    {% if transaction.description %}
+      Описание транзакции: {{ transaction.description }}
+    {% else %}
+      <p>Детальная информация для данной транзакции отсутствует.</p>
+    {% endif %}
+  </div>
+{% endblock %}
