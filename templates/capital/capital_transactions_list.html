@@ -1,33 +1,54 @@
-  {% extends 'base.html' %}
+{% extends 'base.html' %}
 
-  {% block title %}
-    Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
-  {% endblock %}
+{% block title %}
+  Транзакции типа капитала: {{ capital.capital_type }} {{ capital.currency }}
+{% endblock %}
 
-  {% block content %}
-    <h1>Транзакции для: {{ capital.capital_type }}</h1>
-    
-    {% if transactions %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Дата</th>
-            <th>Тип операции</th>
-            <th>Сумма</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for transaction in transactions %}
-          <tr>
-            <td><a href="{% url 'capital:capital_transaction_detail' transaction.id %}">{{ transaction.created_at|date:"d M Y, H:i" }}</a></td>
-            <td>{{ transaction.get_type_display }}</td>
-            <td>{{ transaction.amount }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p>Транзакции не найдены.</p>
-    {% endif %}
+{% block content %}
+  <h1>Транзакции для: {{ capital.capital_type }}</h1>
+  Выберете интервал, чтобы получить транзакции за определённый промежуток времени.
+  <!-- Форма для выбора диапазона дат -->
+  <form method="get" class="form-inline mb-3">
+    <div class="form-group">
+      <label for="start_date">Начальная дата:</label>
+      <input type="date" id="start_date" name="start_date" class="form-control ml-2" 
+             style="width: 150px; padding: 5px;" value="{{ request.GET.start_date }}">
+    </div>
+    <div class="form-group ml-3">
+      <label for="end_date">Конечная дата:</label>
+      <input type="date" id="end_date" name="end_date" class="form-control ml-2" 
+             style="width: 150px; padding: 5px;" value="{{ request.GET.end_date }}">
+    </div></br>
+    <button type="submit" class="btn btn-primary ml-3">Фильтр</button>
+  </form>
+  <a href="?download=1">Скачать список транзакций</a>
+  {% if transactions %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Тип операции</th>
+          <th>Сумма</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for transaction in transactions %}
+        <tr>
+          <td><a href="{% url 'capital:capital_transaction_detail' transaction.id %}">{{ transaction.created_at|date:"d M Y, H:i" }}</a></td>
+          <td>{{ transaction.get_type_display }}</td>
+          <td>
+            {% if transaction.type == 'withdrawal' %}
+              -{{ transaction.amount }}
+            {% else %}
+              {{ transaction.amount }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% include "includes/paginator.html" %}
-  {% endblock %}
+  {% else %}
+    <p>Транзакции не найдены.</p>
+  {% endif %}
+{% endblock %}

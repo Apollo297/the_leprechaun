@@ -27,7 +27,10 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('main:index')
 
 
-class ProfileDetailView(LoginRequiredMixin, DetailView):
+class ProfileDetailView(
+    LoginRequiredMixin,
+    DetailView
+):
     """Профиль пользователя."""
 
     model = User
@@ -50,7 +53,10 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(
+    LoginRequiredMixin,
+    UpdateView
+):
     """Редактирование профиля."""
 
     model = User

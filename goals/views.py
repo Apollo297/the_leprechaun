@@ -30,7 +30,10 @@ from goals.mixins import (
 )
 
 
-class GoalCreateView(LoginRequiredMixin, CreateView):
+class GoalCreateView(
+    LoginRequiredMixin,
+    CreateView
+):
     """Создание новой цели накоплений."""
 
     model = Goals
@@ -62,7 +65,10 @@ class GoalCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class GoalsListView(LoginRequiredMixin, ListView):
+class GoalsListView(
+    LoginRequiredMixin,
+    ListView
+):
     """Раздел целей."""
 
     model = Goals
@@ -99,14 +105,20 @@ class GoalsListView(LoginRequiredMixin, ListView):
         return context
 
 
-class GoalDetailView(GoalMixin, DetailView):
+class GoalDetailView(
+    GoalMixin,
+    DetailView
+):
     """Детальная информация о цели."""
 
     template_name = 'goal/detail_goal.html'
     context_object_name = 'goal'
 
 
-class GoalUpdateView(GoalMixin, UpdateView):
+class GoalUpdateView(
+    GoalMixin,
+    UpdateView
+):
     """Редактирование цели."""
 
     form_class = GoalForm
@@ -132,7 +144,10 @@ class GoalDeleteView(GoalDeleteViewMixin):
     success_url = reverse_lazy('goals:goals_list')
 
 
-class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
+class GoalTransactionCreateView(
+    LoginRequiredMixin,
+    CreateView
+):
     """Создание транзакции цели накоплений."""
 
     model = GoalTransaction
@@ -178,13 +193,17 @@ class GoalTransactionCreateView(LoginRequiredMixin, CreateView):
         return response
 
 
-class ArchiveGoalListView(LoginRequiredMixin, ListView):
+class ArchiveGoalListView(
+    LoginRequiredMixin,
+    ListView
+):
     """
     Список архивированных целей накоплений, у которых достигнута
     целевая сумма.
     """
 
     model = Goals
+    paginate_by = settings.PAGE_PAGINATOR
     template_name = 'goal/archive_goal_list.html'
     context_object_name = 'goals'
 
@@ -200,11 +219,14 @@ class ArchiveGoalListView(LoginRequiredMixin, ListView):
         )
 
 
-class GoalTransactionsListView(LoginRequiredMixin, ListView):
+class GoalTransactionsListView(
+    LoginRequiredMixin,
+    ListView
+):
     """Список транзакций конкретной цели."""
 
     model = GoalTransaction
-    paginate_by = settings.PAGE_PAGINATOR
+    paginate_by = settings.TRANSACTIONS_PAGE_PAGINATOR
     template_name = 'goal/goal_transactions_list.html'
     context_object_name = 'transactions'
 
