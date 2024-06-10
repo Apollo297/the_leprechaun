@@ -25,17 +25,24 @@
 
 Проект "Лепрекон" создан с целью помочь пользователям эффективно управлять своими финансами, осуществлять контроль доходов и расходов, а также достигать своих финансовых целей.</br> Я стремлюсь предоставить интуитивно понятный инструмент для управления личными финансами, который поможет пользователям достичь финансовой стабильности и благополучия.
 
+---
 ![Screenshot_1](https://github.com/Apollo297/the_leprechaun/assets/138869794/b4d3f7bc-c0ec-452e-95e1-d4bb1b4280d4)
+
 ---
 ![Screenshot_2](https://github.com/Apollo297/the_leprechaun/assets/138869794/83428550-c15b-41d9-815a-639df6df32b4)
+
 ---
 ![Screenshot_3](https://github.com/Apollo297/the_leprechaun/assets/138869794/34858d9b-4711-491b-bec6-3138d7236c56)
+
 ---
 ![Screenshot_4](https://github.com/Apollo297/the_leprechaun/assets/138869794/c76080e1-aab3-4161-a514-1c2d00da39e0)
+
 ---
 ![Screenshot_5](https://github.com/Apollo297/the_leprechaun/assets/138869794/7383263d-779d-4438-b6b5-91cac0f2dea3)
+
 ---
 ![Screenshot_6](https://github.com/Apollo297/the_leprechaun/assets/138869794/54e56bb1-040d-479a-a8b7-5b12fa04e35a)
+
 ---
 
 | Адрес | Описание |
